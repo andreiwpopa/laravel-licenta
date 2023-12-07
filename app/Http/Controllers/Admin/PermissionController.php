@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
 {
@@ -25,7 +26,7 @@ class PermissionController extends Controller
 
         Permission::create($validated);
 
-        return to_route('admin.permissions.index');
+        return to_route('admin.permissions.index')->with('message', 'Permission created successfully.');
     }
 
     public function edit(Permission $permission)
@@ -38,6 +39,13 @@ class PermissionController extends Controller
         $validated = $request->validate(['name' => 'required']);
         $permission->update($validated);
 
-        return to_route('admin.permissions.index');
+        return to_route('admin.permissions.index')->with('message', 'Permission updated successfully.');
+    }
+
+    public function destroy(Permission $permission)
+    {
+        $permission->delete();
+
+        return back()->with('message', 'Permission deleted.');
     }
 }

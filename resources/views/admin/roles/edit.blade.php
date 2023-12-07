@@ -28,6 +28,34 @@
                         </form>
                     </div>
                 </div>
+                <div class="mt-6 p-2">
+                    <h2 class="text-2xl font-semibold">Role Permissions</h2>
+                    <div class="mt-4 p-2">
+                        @if($role->permissions)
+                            @foreach($role->permissions as $role_permission)
+                                <span>{{$role_permission->name}}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="max-w-xl">
+                        <form method="POST" action="{{ route('admin.roles.update', $role->id) }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="sm:col-span-6">
+                                <label for="name" class="block text-sm font-medium text-slate-50"> Role Name </label>
+                                <div class="mt-1">
+                                    <input type="text" id="name" name="name" value="{{$role->name}}" class="block w-full transition duration-150 ease-in-out appearance-none bg-white border border-gray-400 rounded-md py-2 px-3 text-base leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                                </div>
+                                @error('name')
+                                <span class="text-red-400 text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="sm:col-span-6 pt-5">
+                                <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-700 rounded-md">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
