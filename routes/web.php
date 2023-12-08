@@ -34,7 +34,7 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::resource('/permissions', PermissionController::class);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
-
+    Route::resource('/users', UserController::class);
 });
 
 Route::middleware('auth')->group(function () {
