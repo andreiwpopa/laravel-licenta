@@ -20,5 +20,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(RoleSeeder::class);
         $this->call(AdminSeeder::class);
+        $this->call(FacultateSeeder::class);
+        $this->call(FacultateDepartamentLicentaSeeder::class);
+        $this->call(DepartamentDisciplineLicentaSeeder::class);
     }
 }

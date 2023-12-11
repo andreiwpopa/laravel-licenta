@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Http\Enums\Roles;
+
 
 class RegisteredUserController extends Controller
 {
@@ -34,18 +36,31 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $request->role
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        $role = $request->role;
+        $uid = User::where('email', $request->email)->value('id');
 
-        return redirect(RouteServiceProvider::HOME);
+        switch($role) {
+            case Roles::PROFESOR->value:
+                $user->assignRole('profesor');
+                return redirect()->route('', ['uid' => $uid]);
+                break;
+            case Roles::STUDENT->value:
+                $user->assignRole('student');
+                return redirect()->route('', ['uid' => $uid]);
+                break;
+        }
+
     }
 }
