@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,6 +36,14 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
     Route::resource('/users', UserController::class);
+
+    Route::get('/users/create/profile', [UserController::class, 'createStudentProfile'])->name('users.create-student-profile');
+    Route::post('/users/create/profile', [UserController::class, 'storeStudentProfile'])->name('users.store-student-profile');
+    Route::get('/users/create/profile/legal', [UserController::class, 'createStudentProfileLegal'])->name('users.create-student-profile-legal');
+    Route::post('/users/create/profile/legal', [UserController::class, 'storeStudentProfileLegal'])->name('users.store-student-profile-legal');
+    Route::get('/users/create/profile/minister', [UserController::class, 'createStudentProfileMinister'])->name('users.create-student-profile-minister');
+    Route::post('/users/create/profile/minister', [UserController::class, 'storeStudentProfileMinister'])->name('users.store-student-profile-minister');
+
 });
 
 Route::middleware('auth')->group(function () {
