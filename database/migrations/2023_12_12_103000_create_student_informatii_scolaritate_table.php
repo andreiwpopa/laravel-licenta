@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('student_informatii_scolaritate', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('sp_id');
+            $table->foreign('sp_id')->references('id')->on('student_profile')->cascadeOnDelete();
             $table->string('categorie_studii');
             $table->integer('an_absolvire_liceu');
             $table->decimal('medie_bacalaureat', 4,2);

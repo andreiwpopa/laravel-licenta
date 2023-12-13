@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('student_profile', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->string('nume_dupa_casatorie');
+            $table->string('nume_complet');
+            $table->string('email');
             $table->dateTime('data_nastere');
             $table->string('tara_nastere');
             $table->string('judet_nastere');
