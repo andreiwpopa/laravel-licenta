@@ -13,15 +13,15 @@ class StudentProfileMinister extends Model
 
 
     protected $fillable = [
-        'user_id',
+        'sp_id',
         'serie_pasaport',
         'nr_aprob_minister',
         'serie_aprob_minister',
         'data_aprob_minister',
     ];
 
-    public function student(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function student_profile(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(StudentProfile::class, 'sp_id');
     }
 }

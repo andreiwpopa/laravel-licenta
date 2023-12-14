@@ -12,18 +12,18 @@ class StudentInformatiiScolaritate extends Model
     protected $table = 'student_informatii_scolaritate';
 
     protected $fillable = [
-        'user_id',
+        'sp_id',
         'categorie_studii',
         'an_absolvire_liceu',
         'medie_bacalaureat',
-        'proveninta',
+        'olimpic',
+        'provenienta',
         'medie_admitere',
-        'sesiune_admitere',
         'promotie',
     ];
 
-    public function student(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function student_profile(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(StudentProfile::class, 'sp_id');
     }
 }

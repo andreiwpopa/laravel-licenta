@@ -12,7 +12,15 @@ class StudentContextScolaritate extends Model
     protected $table = 'student_context_scolaritate';
 
     protected $fillable = [
-
+        'sp_id',
+        'facultate_id',
+        'departament_id',
+        'forma_de_invatamant',
+        'modul',
+        'grupa',
+        'nr_matricol',
+        'tip_loc',
+        'status_curent'
     ];
 
 

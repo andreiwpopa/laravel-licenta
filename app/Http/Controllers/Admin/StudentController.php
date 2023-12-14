@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Facultate;
+use App\Models\StudentInformatiiScolaritate;
 use App\Models\StudentProfile;
 use App\Models\StudentProfileLegal;
 use App\Models\StudentProfileMinister;
@@ -101,14 +103,63 @@ class StudentController extends Controller
 
 
         $studentProfileMinister = StudentProfileMinister::create([
-            'user_id' => $request->id,
+            'sp_id' => $request->id,
             'serie_pasaport' => $request->serie_pasaport,
             'nr_aprob_minister' => $request->nr_aprob_minister,
             'serie_aprob_minister' => $request->serie_aprob_minister,
             'data_aprob_minister' => $request->data_aprob_minister,
         ]);
 
-        return redirect()->route('');
+        return redirect()->route('admin.students.create-informatii-scolaritate');
+
+    }
+
+
+    public function createInformatiiScolaritate()
+    {
+        $id = session('id');
+        return view('admin.students.create-informatii-scolaritate', compact('id'));
+
+    }
+
+    public function storeInformatiiScolaritate(Request $request)
+    {
+        $request->validate([
+            'categorie_studii' => ['required'],
+            'an_absolvire_liceu' => ['required', 'numeric', 'min:4'],
+            'medie_bacalaureat' => ['required', 'numeric', 'between:0,10.01'],
+            'medie_admitere' => ['numeric', 'between:0,10.01'],
+            'promotie' => ['required'],
+
+        ]);
+
+        $informatiiScolaritate = StudentInformatiiScolaritate::create([
+            'sp_id' => $request->id,
+            'categorie_studii' => $request->categorie_studii,
+            'an_absolvire_liceu' => $request->an_absolvire_liceu,
+            'medie_bacalaureat' => $request->medie_bacalaureat,
+            'olimpic' => $request->olimpic,
+            'provenienta'=> $request->provenienta,
+            'medie_admitere' => $request->medie_admitere,
+            'promotie' => $request->promotie,
+        ]);
+
+        return redirect()->route('admin.students.create-context-scolaritate');
+    }
+
+    public function createContextScolaritate()
+    {
+        $id = session('id');
+        $facultati = Facultate::all();
+
+        return view('admin.students.create-context-scolaritate')->with([
+            'id' => $id,
+            'facultati' => $facultati,
+        ]);
+    }
+
+    public function storeContextScolaritate(Request $request)
+    {
 
     }
 

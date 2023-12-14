@@ -50,7 +50,7 @@ class UserController extends Controller
         event(new Registered($user));
 
         $role = $request->role;
-        session(['uid' => User::where('email', $request->email)->value('id')]);
+        session(['id' => User::where('email', $request->email)->value('id')]);
 
         switch($role) {
             case Roles::PROFESOR->value:
@@ -65,9 +65,9 @@ class UserController extends Controller
     }
     public function createStudentProfile()
     {
-        $uid = session('uid');
+        $id = session('id');
 
-        return view('admin.users.student.create-profile', compact('uid'));
+        return view('admin.users.student.create-profile', compact('id'));
     }
 
     public function storeStudentProfile(Request $request)
@@ -95,9 +95,9 @@ class UserController extends Controller
 
     public function createStudentProfileLegal()
     {
-        $uid = session('uid');
+        $id = session('id');
 
-        return view('admin.users.student.create-profile-legal', compact('uid'));
+        return view('admin.users.student.create-profile-legal', compact('id'));
 
     }
 
@@ -136,9 +136,9 @@ class UserController extends Controller
 
     public function createStudentProfileMinister()
     {
-        $uid = session('uid');
+        $id = session('id');
 
-        return view('admin.users.student.create-profile-minister', compact('uid'));
+        return view('admin.users.student.create-profile-minister', compact('id'));
     }
 
     public function storeStudentProfileMinister(Request $request)
@@ -156,6 +156,6 @@ class UserController extends Controller
             'data_aprob_minister' => $request->data_aprob_minister,
         ]);
 
-        session()->forget('uid');
     }
+
 }

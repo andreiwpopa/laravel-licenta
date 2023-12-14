@@ -28,6 +28,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/departamente/{facultate_id}', [\App\Http\Controllers\FacultateDepartamentLicentaController::class, 'getByFacultate']);
+Route::get('/discipline/{departament_id}', [\App\Http\Controllers\DepartamentDisciplineLicentaController::class, 'getByDepartament']);
+
 Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->group(function() {
     Route::get('/', [IndexController::class, 'index'])->name('index');
     Route::resource('/roles', RoleController::class);
@@ -45,14 +48,11 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::post('/students/create-profile/legal', [StudentController::class, 'storeProfileLegal'])->name('students.store-profile-legal');
     Route::get('/students/create-profile/minister', [StudentController::class, 'createProfileMinister'])->name('students.create-profile-minister');
     Route::post('/students/create-profile/minister', [StudentController::class, 'storeProfileMinister'])->name('students.store-profile-minister');
+    Route::get('/student/create-profile/informatii-scolaritate', [StudentController::class, 'createInformatiiScolaritate'])->name('students.create-informatii-scolaritate');
+    Route::post('/students/create-profile/informatii-scolaritate', [StudentController::class, 'storeInformatiiScolaritate'])->name('students.store-informatii-scolaritate');
+    Route::get('/students/create-profile/context-scolaritate', [StudentController::class, 'createContextScolaritate'])->name('students.create-context-scolaritate');
+    Route::post('/students/create-profile/context-scolaritate', [StudentController::class, 'storeContextScolaritate'])->name('students.store-context-scolaritate');
 
-
-    Route::get('/users/create/profile', [UserController::class, 'createStudentProfile'])->name('users.create-student-profile');
-    Route::post('/users/create/profile', [UserController::class, 'storeStudentProfile'])->name('users.store-student-profile');
-    Route::get('/users/create/profile/legal', [UserController::class, 'createStudentProfileLegal'])->name('users.create-student-profile-legal');
-    Route::post('/users/create/profile/legal', [UserController::class, 'storeStudentProfileLegal'])->name('users.store-student-profile-legal');
-    Route::get('/users/create/profile/minister', [UserController::class, 'createStudentProfileMinister'])->name('users.create-student-profile-minister');
-    Route::post('/users/create/profile/minister', [UserController::class, 'storeStudentProfileMinister'])->name('users.store-student-profile-minister');
 
 });
 
