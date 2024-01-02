@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StudentProfile extends Model
 {
@@ -12,16 +13,26 @@ class StudentProfile extends Model
     protected $table = 'student_profile';
 
     protected $fillable = [
-        'user_id',
-        'nume_dupa_casatorie',
+        'nume_complet',
+        'email',
         'data_nastere',
         'tara_nastere',
         'judet_nastere',
         'sex',
     ];
 
-    public function student(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function student_profile(): HasOne
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasOne(User::class);
+    }
+
+    public function student_profile_legal(): HasOne
+    {
+        return $this->hasOne(StudentProfileLegal::class);
+    }
+
+    public function student_profile_minister(): HasOne
+    {
+        return $this->hasOne(StudentProfileMinister::class);
     }
 }

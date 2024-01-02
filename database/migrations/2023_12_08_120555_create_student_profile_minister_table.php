@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('student_profile_minister', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('sp_id');
+            $table->foreign('sp_id')->references('id')->on('student_profile')->cascadeOnDelete();
             $table->string('serie_pasaport');
             $table->string('nr_aprob_minister');
             $table->string('serie_aprob_minister');

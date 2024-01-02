@@ -2,11 +2,7 @@
 
     <div class="w-full sm:max-w-md mx-auto mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
 
-<<<<<<< HEAD
-        <form method="POST" action="{{ route('admin.register') }}">
-=======
         <form method="POST" action="{{ route('admin.users.store') }}">
->>>>>>> b669294c8a7f06b5fd6a24ae4c6c82739edd3d91
             @csrf
 
             <!-- Name -->

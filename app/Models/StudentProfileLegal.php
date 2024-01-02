@@ -13,7 +13,7 @@ class StudentProfileLegal extends Model
 
 
     protected $fillable = [
-        'user_id',
+        'sp_id',
         'mediu',
         'strain',
         'minoritar',
@@ -26,8 +26,8 @@ class StudentProfileLegal extends Model
         'nr_livret_militar',
     ];
 
-    public function student(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function student_profile(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(StudentProfile::class, 'sp_id');
     }
 }

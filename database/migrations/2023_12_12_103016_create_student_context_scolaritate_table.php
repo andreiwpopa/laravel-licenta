@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('student_context_scolaritate', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('sp_id');
+            $table->foreign('sp_id')->references('id')->on('student_profile')->cascadeOnDelete();
             $table->foreignId('facultate_id');
             $table->foreign('facultate_id')->references('id')->on('facultate')->cascadeOnDelete();
             $table->foreignId('departament_id');
@@ -22,8 +22,7 @@ return new class extends Migration
             $table->string('forma_de_invatamant');
             $table->string('modul');
             $table->string('grupa');
-            $table->bigInteger('nr_matricol');
-            $table->string('tip_loc');
+            $table->bigInteger('numar_matricol');
             $table->string('status_curent');
             $table->timestamps();
         });
