@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('an_absolvire_liceu');
             $table->decimal('medie_bacalaureat', 4,2);
             $table->string('olimpic');
-            $table->string('provenienta');
             $table->decimal('medie_admitere', 4,2);
             $table->string('promotie');
             $table->timestamps();

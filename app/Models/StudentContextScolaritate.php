@@ -16,11 +16,11 @@ class StudentContextScolaritate extends Model
         'facultate_id',
         'departament_id',
         'forma_de_invatamant',
-        'modul',
-        'grupa',
-        'nr_matricol',
-        'tip_loc',
-        'status_curent'
+//        'modul',
+//        'grupa',
+//        'nr_matricol',
+//        'tip_loc',
+//        'status_curent'
     ];
 
 

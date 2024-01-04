@@ -20,10 +20,10 @@ return new class extends Migration
             $table->foreignId('departament_id');
             $table->foreign('departament_id')->references('id')->on('facultate_departament_licenta')->cascadeOnDelete();
             $table->string('forma_de_invatamant');
-            $table->string('modul');
-            $table->string('grupa');
-            $table->bigInteger('numar_matricol');
-            $table->string('status_curent');
+//            $table->string('modul');
+//            $table->string('grupa');
+//            $table->bigInteger('numar_matricol');
+//            $table->string('status_curent');
             $table->timestamps();
         });
     }
