@@ -28,7 +28,7 @@ class StudentProfileLegalFactory extends Factory
             'minoritar' => fake()->randomElement(['Da', 'Nu']),
             'cetatenie' => fake()->word(),
             'nationalitate' => fake()->word(),
-            'cnp' => fake()->randomNumber(10, true),
+            'cnp' => fake()->randomNumber(5, true) . fake()->randomNumber(5,true),
             'serie' => fake()->bothify('??-######'),
             'stare_civila' => fake()->randomElement(['casatorit', 'necasatorit']),
             'situatie_militara' => fake()->randomElement(['neincorporabil', 'incorporabil']),

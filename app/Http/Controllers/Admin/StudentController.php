@@ -10,13 +10,20 @@ use App\Models\StudentProfile;
 use App\Models\StudentProfileLegal;
 use App\Models\StudentProfileMinister;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
     public function index()
     {
-        $students = '';
-        return view('admin.students.index');
+        $students = DB::table('student_profile')
+            ->join('student_context_scolaritate', 'student_profile.id', '=', 'student_context_scolaritate.sp_id')
+            ->join('facultate', 'student_context_scolaritate.facultate_id', '=', 'facultate.id')
+            ->join('facultate_departament_licenta', 'student_context_scolaritate.departament_id', '=', 'facultate_departament_licenta.id')
+            ->select('student_profile.nume_complet AS nume', 'student_profile.email AS email', 'facultate.facultate_name as facultate', 'facultate_departament_licenta.departament_name as departament')
+            ->get();
+
+        return view('admin.students.index', compact('students'));
     }
 
     public function createProfile()

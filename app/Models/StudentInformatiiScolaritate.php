@@ -17,7 +17,6 @@ class StudentInformatiiScolaritate extends Model
         'an_absolvire_liceu',
         'medie_bacalaureat',
         'olimpic',
-        'provenienta',
         'medie_admitere',
         'promotie',
     ];

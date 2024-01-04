@@ -21,7 +21,11 @@ class StudentProfileMinisterFactory extends Factory
 
         $existingStudentProfileId = StudentProfile::pluck('id')[$index++];
         return [
-            'sp_id'
+            'sp_id' => $existingStudentProfileId,
+            'serie_pasaport' => fake()->randomNumber(5, true),
+            'nr_aprob_minister' => fake()->randomNumber(5, true),
+            'serie_aprob_minister' => fake()->randomNumber(5, true),
+            'data_aprob_minister' => fake()->dateTime()
         ];
     }
 }
