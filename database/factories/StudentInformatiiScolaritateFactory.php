@@ -22,8 +22,9 @@ class StudentInformatiiScolaritateFactory extends Factory
 
         $existingStudentProfileId = StudentProfile::pluck('id')[$index++];
 
-        $startYear = fake()->year();
-        $endYear = fake()->year('+1');
+        $currentYear = date('Y');
+        $startYear = $currentYear;
+        $endYear = $currentYear + 1;
 
         return [
             'sp_id' => $existingStudentProfileId,
