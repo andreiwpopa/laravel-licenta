@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Enums\LocuriAdmitere;
 use App\Models\Facultate;
+use App\Models\FacultateDepartamentLicenta;
 use App\Models\StudentInformatiiScolaritate;
 use App\Models\StudentContextScolaritate;
 use App\Models\StudentProfile;
@@ -11,6 +13,7 @@ use App\Models\StudentProfileLegal;
 use App\Models\StudentProfileMinister;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class StudentController extends Controller
 {
@@ -23,7 +26,13 @@ class StudentController extends Controller
             ->select('student_profile.nume_complet AS nume', 'student_profile.email AS email', 'facultate.facultate_name as facultate', 'facultate_departament_licenta.departament_name as departament')
             ->get();
 
-        return view('admin.students.index', compact('students'));
+        $facultati = Facultate::all();
+
+
+        return view('admin.students.index')->with([
+            'students' => $students,
+            'facultati' => $facultati,
+        ]);
     }
 
     public function createProfile()
@@ -152,7 +161,7 @@ class StudentController extends Controller
             'promotie' => $request->promotie,
         ]);
 
-        return redirect()->route('admin.students.create-context-scolaritate');
+        return redirect()->route('admin.studenvts.create-context-scolaritate');
     }
 
     public function createContextScolaritate()
@@ -183,6 +192,77 @@ class StudentController extends Controller
         ]);
 
         return view('admin.students.index');
+    }
+
+    public function genereazaStudentiAdmisi(Request $request)
+    {
+        $facultateId = $request->input('facultate');
+        $departamentId = $request->input('departament');
+
+        $facultate = Facultate::find($facultateId);
+        $departament = FacultateDepartamentLicenta::find($departamentId);
+
+        $locuriAdmitere = match (strtolower($departament->departament_name)) {
+            'informatica' => LocuriAdmitere::informatica,
+            // adauga alte departamente as needed
+            default => null,
+        };
+
+        if($locuriAdmitere !== null) {
+            $tableName = strtolower('studenti_admisi_' . $departament->departament_name . '_' . '2024-2025');
+
+            if(!Schema::hasTable($tableName)) {
+                Schema::create($tableName, function($table) {
+                    $table->id();
+                    $table->unsignedBigInteger('sp_id');
+                    $table->string('nume_complet');
+                    $table->string('email');
+                    $table->unsignedBigInteger('facultate_id');
+                    $table->unsignedBigInteger('departament_id');
+                    $table->float('medie_bacalaureat');
+                    $table->boolean('loc_confirmat')->default(0);
+                    $table->string('promotie');
+                    $table->timestamps();
+
+                    $table->foreign('sp_id')->references('id')->on('student_profile');
+                    $table->foreign('facultate_id')->references('id')->on('facultate');
+                    $table->foreign('departament_id')->references('id')->on('facultate_departament_licenta');
+                });
+            }
+
+            $studentiAdmisi = DB::table('student_profile')
+                ->join('student_context_scolaritate', 'student_profile.id', '=', 'student_context_scolaritate.sp_id')
+                ->join('student_informatii_scolaritate', 'student_profile.id', '=', 'student_informatii_scolaritate.sp_id')
+                ->select('student_profile.id AS sp_id',
+                    'student_profile.nume_complet AS nume_complet',
+                    'student_profile.email AS email',
+                    'student_context_scolaritate.facultate_id AS facultate_id',
+                    'student_context_scolaritate.departament_id AS departament_id',
+                    'student_informatii_scolaritate.medie_bacalaureat AS medie_bacalaureat',
+                    'student_informatii_scolaritate.promotie')
+                ->where('facultate_id', $facultateId)
+                ->where('departament_id', $departamentId)
+                ->orderBy('medie_bacalaureat', 'desc')
+                ->take($locuriAdmitere)
+                ->get();
+
+            foreach ($studentiAdmisi as $student) {
+                DB::table($tableName)->insert([
+                    'sp_id' => $student->sp_id,
+                    'nume_complet' => $student->nume_complet,
+                    'email' => $student->email,
+                    'facultate_id' => $student->facultate_id,
+                    'departament_id' => $student->departament_id,
+                    'medie_bacalaureat' => $student->medie_bacalaureat,
+                    'promotie' => $student->promotie
+                ]);
+            }
+            return redirect()->back()->with('message', 'generati');
+        } else {
+            return redirect()->back()->with('message', 'nu merge');
+        }
+
+
     }
 
 }

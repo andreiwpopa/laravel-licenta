@@ -31,7 +31,7 @@ class FacultateDepartamentLicentaSeeder extends Seeder
         ]);
         FacultateDepartamentLicenta::create([
             'facultate_id' => '5',
-            'departament_name' => 'Informatică'
+            'departament_name' => 'Informatica'
         ]);
         FacultateDepartamentLicenta::create([
             'facultate_id' => '5',

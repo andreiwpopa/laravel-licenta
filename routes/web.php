@@ -42,6 +42,7 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::resource('/users', UserController::class);
 
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    Route::post('/students/generate', [StudentController::class, 'genereazaStudentiAdmisi'])->name('students.genereaza');
     Route::get('/students/create-profile', [StudentController::class, 'createProfile'])->name('students.create');
     Route::post('/students/create-profile', [StudentController::class, 'storeProfile'])->name('students.store');
     Route::get('/students/create-profile/legal', [StudentController::class, 'createProfileLegal'])->name('students.create-profile-legal');
