@@ -35,6 +35,20 @@ class StudentController extends Controller
         ]);
     }
 
+    public function indexAdmisi()
+    {
+        $facultati = Facultate::all();
+
+        return view('admin.students.admisi-index')->with([
+            'facultati' => $facultati
+        ]);
+    }
+
+    public function getStudents($facultateId, $departamentId)
+    {
+        return response()->json($date);
+    }
+
     public function createProfile()
     {
         return view('admin.students.create');
@@ -161,7 +175,7 @@ class StudentController extends Controller
             'promotie' => $request->promotie,
         ]);
 
-        return redirect()->route('admin.students.create-context-scolaritate');
+        return redirect()->route('admin.studenvts.create-context-scolaritate');
     }
 
     public function createContextScolaritate()
@@ -202,14 +216,16 @@ class StudentController extends Controller
         $facultate = Facultate::find($facultateId);
         $departament = FacultateDepartamentLicenta::find($departamentId);
 
-        $locuriAdmitere = match (strtolower($departament->departament_name)) {
-            'informatica' => LocuriAdmitere::informatica,
-            // adauga alte departamente as needed
-            default => null,
-        };
+        $locuriAdmitere = null;
+
+        foreach(LocuriAdmitere::cases() as $locuri) {
+            if ($locuri->name == strtolower($departament->departament_name)) {
+                $locuriAdmitere = $locuri->value;
+            }
+        }
 
         if($locuriAdmitere !== null) {
-            $tableName = strtolower($facultate->facultate_name . '_' . $departament->departament_name . '_admisi');
+            $tableName = strtolower('studenti_admisi_2024-2025');
 
             if(!Schema::hasTable($tableName)) {
                 Schema::create($tableName, function($table) {
@@ -221,11 +237,12 @@ class StudentController extends Controller
                     $table->unsignedBigInteger('departament_id');
                     $table->float('medie_bacalaureat');
                     $table->boolean('loc_confirmat')->default(0);
+                    $table->string('promotie');
                     $table->timestamps();
 
                     $table->foreign('sp_id')->references('id')->on('student_profile');
                     $table->foreign('facultate_id')->references('id')->on('facultate');
-                    $table->foreign('departament_id')->references('id')->on('facultate_departamente_licenta');
+                    $table->foreign('departament_id')->references('id')->on('facultate_departament_licenta');
                 });
             }
 
@@ -256,7 +273,9 @@ class StudentController extends Controller
                     'promotie' => $student->promotie
                 ]);
             }
-            return redirect()->back();
+            return redirect()->back()->with('message', 'generati');
+        } else {
+            return redirect()->back()->with('message', 'nu merge');
         }
 
 

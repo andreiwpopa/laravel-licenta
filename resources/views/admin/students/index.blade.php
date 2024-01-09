@@ -7,7 +7,7 @@
                     <p class="text-white text-xl">Studenti Inscrisi</p>
                 </div>
                 <div class="flex justify-between p-2">
-                    <a href="{{ route('admin.students.create') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md text-white">Add Student</a>
+                    <a href="{{ route('admin.students.create') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md text-white">Inscrie Student</a>
                     <button x-data x-on:click="$dispatch('open-modal')" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md text-white">Admitere</button>
                 </div>
 
@@ -15,7 +15,7 @@
                     <div class="w-full sm:max-w-md mx-auto mt-5 mb-5 px-6 py-4 ">
                         <h1 class="font-bold text-xl text-center text-gray-700 dark:text-gray-300">Admitere</h1>
                         <p class="mt-5 font-medium text-lg text-gray-700 dark:text-gray-300">Selecteaza facultatea si departamentul pentru admiterea studentilor</p>
-                        <form method="POST" action="" class="mt-5">
+                        <form method="POST" action="{{route('admin.students.genereaza')}}" class="mt-5">
                             @csrf
                             <div>
                                 <label for="facultate" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Facultate</label>
@@ -79,8 +79,7 @@
                         @endforeach
                         </tbody>
                     </table>
-
-
+                </div>
             </div>
         </div>
     </div>
@@ -94,6 +93,9 @@
 
     facultate.addEventListener('change', function() {
         const selectedFacultateId = this.value;
+
+        departamente.innerHTML = '<option value="">Select Departament</option>';
+
 
         if (selectedFacultateId) {
             fetch(`/departamente/${selectedFacultateId}`)
