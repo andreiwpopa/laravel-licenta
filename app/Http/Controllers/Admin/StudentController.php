@@ -24,7 +24,7 @@ class StudentController extends Controller
             ->join('facultate', 'student_context_scolaritate.facultate_id', '=', 'facultate.id')
             ->join('facultate_departament_licenta', 'student_context_scolaritate.departament_id', '=', 'facultate_departament_licenta.id')
             ->select('student_profile.nume_complet AS nume', 'student_profile.email AS email', 'facultate.facultate_name as facultate', 'facultate_departament_licenta.departament_name as departament')
-            ->get();
+            ->paginate(10);
 
         $facultati = Facultate::all();
 
@@ -44,10 +44,11 @@ class StudentController extends Controller
         ]);
     }
 
-    public function getStudents($facultateId, $departamentId)
+    public function dashboardStudenti()
     {
-        return response()->json($date);
+        return view('admin.students.panou-principal');
     }
+
 
     public function createProfile()
     {
@@ -272,10 +273,26 @@ class StudentController extends Controller
                     'medie_bacalaureat' => $student->medie_bacalaureat,
                     'promotie' => $student->promotie
                 ]);
+
             }
             return redirect()->back()->with('message', 'generati');
         } else {
             return redirect()->back()->with('message', 'nu merge');
+        }
+
+
+    }
+
+    public function completeazaLocuri(Request $request)
+    {
+        $departamentId = $request->departament_id;
+        $departamentName = FacultateDepartamentLicenta::find($departamentId);
+        $locuriAdmitere = null;
+
+        foreach(LocuriAdmitere::cases() as $locuri) {
+            if ($locuri->name == strtolower($departamentName)) {
+                $locuriAdmitere = $locuri->value;
+            }
         }
 
 

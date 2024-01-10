@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('sp_id');
             $table->foreign('sp_id')->references('id')->on('student_profile')->cascadeOnDelete();
             $table->foreignId('facultate_id');
-            $table->foreign('facultate_id')->references('id')->on('facultate')->cascadeOnDelete();
+            $table->foreign('facultate_id')->references('id')->on('facultate');
             $table->foreignId('departament_id');
-            $table->foreign('departament_id')->references('id')->on('facultate_departament_licenta')->cascadeOnDelete();
+            $table->foreign('departament_id')->references('id')->on('facultate_departament_licenta');
             $table->string('forma_de_invatamant');
 //            $table->string('modul');
 //            $table->string('grupa');
