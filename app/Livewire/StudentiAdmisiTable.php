@@ -5,7 +5,9 @@ namespace App\Livewire;
 use App\Models\Facultate;
 use App\Models\FacultateDepartamentLicenta;
 use App\Models\StudentAdmis;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,12 +17,36 @@ class StudentiAdmisiTable extends Component
 
     public $search = '';
     public $confirmat = '';
+    public $facultateId;
+    public $departamentId;
 
+    public function updatedFacultateId()
+    {
+        $this->departamentId = null;
+    }
+
+    #[Computed()]
+    public function facultati()
+    {
+        return Facultate::all();
+    }
+
+    #[Computed()]
+    public function departamente()
+    {
+        return FacultateDepartamentLicenta::where('facultate_id', $this->facultateId)->get();
+    }
 
     public function confirma_loc(StudentAdmis $studentAdmis)
     {
         $studentAdmis->loc_confirmat = 1;
         $studentAdmis->update();
+
+        $contStudent = User::create([
+
+        ]);
+
+        $contStudent->assignRole('student');
     }
 
     public function neconfirmat(StudentAdmis $studentAdmis)
@@ -33,6 +59,9 @@ class StudentiAdmisiTable extends Component
         $studentiAdmisi = StudentAdmis::search($this->search)
             ->when($this->confirmat !== '', function($query) {
                 $query->where('loc_confirmat', $this->confirmat);
+            })
+            ->when($this->facultateId && $this->departamentId, function ($query) {
+                $query->where('departament_id', $this->departamentId);
             })
             ->paginate(10);
         $facultati = Facultate::all();

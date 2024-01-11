@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Enums\LocuriAdmitere;
 use App\Models\Facultate;
 use App\Models\FacultateDepartamentLicenta;
+use App\Models\StudentAdmis;
 use App\Models\StudentInformatiiScolaritate;
 use App\Models\StudentContextScolaritate;
 use App\Models\StudentProfile;
@@ -176,7 +177,7 @@ class StudentController extends Controller
             'promotie' => $request->promotie,
         ]);
 
-        return redirect()->route('admin.studenvts.create-context-scolaritate');
+        return redirect()->route('admin.students.create-context-scolaritate');
     }
 
     public function createContextScolaritate()
@@ -256,12 +257,14 @@ class StudentController extends Controller
                     'student_context_scolaritate.facultate_id AS facultate_id',
                     'student_context_scolaritate.departament_id AS departament_id',
                     'student_informatii_scolaritate.medie_bacalaureat AS medie_bacalaureat',
-                    'student_informatii_scolaritate.promotie')
+                    'student_informatii_scolaritate.promotie AS promotie')
                 ->where('facultate_id', $facultateId)
                 ->where('departament_id', $departamentId)
                 ->orderBy('medie_bacalaureat', 'desc')
                 ->take($locuriAdmitere)
                 ->get();
+
+
 
             foreach ($studentiAdmisi as $student) {
                 DB::table($tableName)->insert([
@@ -286,16 +289,49 @@ class StudentController extends Controller
     public function completeazaLocuri(Request $request)
     {
         $departamentId = $request->departament_id;
+        $facultateId = $request->facultate_id;
         $departamentName = FacultateDepartamentLicenta::find($departamentId);
         $locuriAdmitere = null;
 
         foreach(LocuriAdmitere::cases() as $locuri) {
-            if ($locuri->name == strtolower($departamentName)) {
+            if ($locuri->name == strtolower($departamentName->departament_name)) {
                 $locuriAdmitere = $locuri->value;
             }
         }
 
+        $locConfirmate = DB::table('studenti_admisi_2024-2025')->where('loc_confirmat', '=', '1')->get()->count();
+        $nrLocuriComp = $locuriAdmitere - $locConfirmate;
 
+        $compLocuri = DB::table('student_profile')
+            ->join('student_context_scolaritate', 'student_profile.id', '=', 'student_context_scolaritate.sp_id')
+            ->join('student_informatii_scolaritate', 'student_profile.id', '=', 'student_informatii_scolaritate.sp_id')
+            ->select('student_profile.id AS sp_id',
+                'student_profile.nume_complet AS nume_complet',
+                'student_profile.email AS email',
+                'student_context_scolaritate.facultate_id AS facultate_id',
+                'student_context_scolaritate.departament_id AS departament_id',
+                'student_informatii_scolaritate.medie_bacalaureat AS medie_bacalaureat',
+                'student_informatii_scolaritate.promotie')
+            ->where('facultate_id', $facultateId)
+            ->where('departament_id', $departamentId)
+            ->orderBy('medie_bacalaureat', 'desc')
+            ->skip($locuriAdmitere)
+            ->take($nrLocuriComp)
+            ->get();
+
+        foreach($compLocuri as $compLoc) {
+            DB::table('studenti_admisi_2024-2025')->insert([
+                'sp_id' => $compLoc->sp_id,
+                'nume_complet' => $compLoc->nume_complet,
+                'email' => $compLoc->email,
+                'facultate_id' => $compLoc->facultate_id,
+                'departament_id' => $compLoc->departament_id,
+                'medie_bacalaureat' => $compLoc->medie_bacalaureat,
+                'promotie' => $compLoc->promotie
+            ]);
+        }
+
+        return redirect()->back()->with('message', 'locuri completate');
     }
 
 }

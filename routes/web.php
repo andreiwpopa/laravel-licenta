@@ -42,6 +42,7 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::resource('/users', UserController::class);
 
     Route::get('/student-dashboard', [StudentController::class, 'dashboardStudenti'])->name('students.dashboard');
+    Route::post('/student-dashboard/completeaza-locuri', [StudentController::class, 'completeazaLocuri'])->name('students.completeaza');
 
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
     Route::get('/students-admisi', [StudentController::class, 'indexAdmisi'])->name('students.admisi');

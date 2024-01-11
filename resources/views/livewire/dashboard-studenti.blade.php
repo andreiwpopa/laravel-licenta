@@ -22,8 +22,10 @@
                         @endforeach
 
                         <div class="rounded-lg border dark:border-gray-700 bg-card text-card-foreground shadow-2xl" data-v0-t="card">
-                            <form method="POST" action="">
+                            <form method="POST" action=" {{ route('admin.students.completeaza') }}">
+                                @csrf
                                 <input type="hidden" name="departament_id" value="{{$departament->id}}">
+                                <input type="hidden" name="facultate_id" value="{{$facultate->id}}">
 
                                 <div class="p-6 flex flex-row items-center justify-between pb-2 space-y-0">
                                     <h3 class="tracking-tight text-base font-base dark:text-gray-200">{{$departament->departament_name}}</h3>

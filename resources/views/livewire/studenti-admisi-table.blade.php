@@ -3,9 +3,24 @@
         <div class="flex-items-center justify-between d p-4">
             <div class="flex justify-between">
                 <input wire:model.live.debounce.300ms="search" type="text" class='border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm' placeholder="Cauta" required=""/>
+
+                <div>
+                    <select wire:model.live="facultateId" name="facultate" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                        <option value="">Selecteaza facultate</option>
+                        @foreach($this->facultati as $facultate)
+                            <option value="{{ $facultate->id }}">{{ $facultate->facultate_name }}</option>
+                        @endforeach
+                    </select>
+                    <select wire:model.live="departamentId" name="departamente"  class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                        <option value="">Selecteaza departament</option>
+                        @foreach($this->departamente as $departament)
+                            <option value="{{ $departament->id }}">{{ $departament->departament_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div>
                     <label class="text-xs text-gray-700 uppercase dark:text-gray-400 pr-3">Loc confirmat</label>
-                    <select wire:model.live="confirmat" id="" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <select wire:model.live="confirmat" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                         <option value="">Toti</option>
                         <option value="0">Neconfirmat</option>
                         <option value="1">Confirmat</option>
