@@ -7,7 +7,7 @@
                     <p class="text-white text-xl">Studenti Inscrisi</p>
                 </div>
                 <div class="flex justify-between p-2">
-                    <a href="{{ route('admin.students.create') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md text-white">Add Student</a>
+                    <a href="{{ route('admin.students.create') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md text-white">Inscrie Student</a>
                     <button x-data x-on:click="$dispatch('open-modal')" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md text-white">Admitere</button>
                 </div>
 
@@ -79,8 +79,11 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="mt-2">
+                        {{ $students->links() }}
+                    </div>
 
-
+                </div>
             </div>
         </div>
     </div>

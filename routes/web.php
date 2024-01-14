@@ -41,7 +41,11 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
     Route::resource('/users', UserController::class);
 
+    Route::get('/student-dashboard', [StudentController::class, 'dashboardStudenti'])->name('students.dashboard');
+    Route::post('/student-dashboard/completeaza-locuri', [StudentController::class, 'completeazaLocuri'])->name('students.completeaza');
+
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    Route::get('/students-admisi', [StudentController::class, 'indexAdmisi'])->name('students.admisi');
     Route::post('/students/generate', [StudentController::class, 'genereazaStudentiAdmisi'])->name('students.genereaza');
     Route::get('/students/create-profile', [StudentController::class, 'createProfile'])->name('students.create');
     Route::post('/students/create-profile', [StudentController::class, 'storeProfile'])->name('students.store');

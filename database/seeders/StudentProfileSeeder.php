@@ -16,7 +16,7 @@ class StudentProfileSeeder extends Seeder
      */
     public function run(): void
     {
-        $studentProfiles = StudentProfile::factory()->count(100)->create();
+        $studentProfiles = StudentProfile::factory()->count(10000)->create();
 
         foreach ($studentProfiles as $studentProfile) {
             StudentProfileLegal::factory()->create(['sp_id' => $studentProfile->id]);
