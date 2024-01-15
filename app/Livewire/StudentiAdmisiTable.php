@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Http\Enums\Roles;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Str;
 
 class StudentiAdmisiTable extends Component
 {
@@ -43,7 +46,11 @@ class StudentiAdmisiTable extends Component
         $studentAdmis->update();
 
         $contStudent = User::create([
-
+            'name' => $studentAdmis->nume_complet,
+            'email' => $studentAdmis->email,
+            'password' => 'parola12345',
+            'role_id' => Roles::STUDENT->value,
+            'sp_id' => $studentAdmis->sp_id,
         ]);
 
         $contStudent->assignRole('student');
@@ -56,33 +63,45 @@ class StudentiAdmisiTable extends Component
 
     public function render()
     {
-        $studentiAdmisi = StudentAdmis::search($this->search)
-            ->when($this->confirmat !== '', function($query) {
-                $query->where('loc_confirmat', $this->confirmat);
-            })
-            ->when($this->facultateId && $this->departamentId, function ($query) {
-                $query->where('departament_id', $this->departamentId);
-            })
-            ->paginate(10);
-        $facultati = Facultate::all();
-        $departamente = FacultateDepartamentLicenta::all();
+        try {
+            $studentiAdmisi = StudentAdmis::search($this->search)
+                ->when($this->confirmat !== '', function($query) {
+                    $query->where('loc_confirmat', $this->confirmat);
+                })
+                ->when($this->facultateId && $this->departamentId, function ($query) {
+                    $query->where('departament_id', $this->departamentId);
+                })
+                ->paginate(10);
+            $facultati = Facultate::all();
+            $departamente = FacultateDepartamentLicenta::all();
 
 
-        foreach($studentiAdmisi as $student) {
-            foreach($facultati as $facultate) {
-                if ($student->facultate_id == $facultate->id){
-                    $student->facultate_id = $facultate->facultate_name;
+            foreach($studentiAdmisi as $student) {
+                foreach($facultati as $facultate) {
+                    if ($student->facultate_id == $facultate->id){
+                        $student->facultate_id = $facultate->facultate_name;
+                    }
+                }
+                foreach($departamente as $departament) {
+                    if($student->departament_id == $departament->id) {
+                        $student->departament_id = $departament->departament_name;
+                    }
                 }
             }
-            foreach($departamente as $departament) {
-                if($student->departament_id == $departament->id) {
-                    $student->departament_id = $departament->departament_name;
-                }
-            }
+
+            return view('livewire.studenti-admisi-table', [
+                'students' => $studentiAdmisi
+            ]);
+        } catch (QueryException $e) {
+            if (Str::contains($e->getMessage(), 'table or view not found')) {
+                return view('livewire.studenti-admisi-table', [
+                    'message' => 'Admiterea trebuie realizata',
+            ]);
+        } else {
+            throw $e;
+        }
         }
 
-        return view('livewire.studenti-admisi-table', [
-            'students' => $studentiAdmisi
-        ]);
+
     }
 }

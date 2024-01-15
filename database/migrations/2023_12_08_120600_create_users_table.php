@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->foreignId('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreignId('sp_id');
+            $table->foreign('sp_id')->references('id')->on('student_profile');
             $table->rememberToken();
             $table->timestamps();
         });

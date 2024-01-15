@@ -8,6 +8,11 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Http\Enums\Roles;
+use App\Models\StudentProfile;
+use App\Models\StudentProfileLegal;
+use App\Models\StudentProfileMinister;
+use App\Models\StudentInformatiiScolaritate;
+use App\Models\StudentContextScolaritate;
 
 class AdminSeeder extends Seeder
 {
@@ -16,6 +21,13 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
+        $adminProfile = StudentProfile::factory()->make();
+        $adminProfile->save();
+
+        StudentProfileLegal::factory()->create(['sp_id' => $adminProfile->id]);
+        StudentProfileMinister::factory()->create(['sp_id' => $adminProfile->id]);
+        StudentInformatiiScolaritate::factory()->create(['sp_id' => $adminProfile->id]);
+        StudentContextScolaritate::factory()->create(['sp_id' => $adminProfile->id]);
 
         $user = User::create([
             'name' => 'admin',
@@ -23,6 +35,7 @@ class AdminSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => 'admin',
             'role_id' => Roles::ADMIN->value,
+            'sp_id' => $adminProfile->id,
         ]);
 
         $user ->assignRole('admin');
